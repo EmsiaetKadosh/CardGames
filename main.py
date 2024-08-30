@@ -1,16 +1,91 @@
-# 这是一个示例 Python 脚本。
-
-# 按 Shift+F10 执行或将其替换为您的代码。
-# 按 双击 Shift 在所有地方搜索类、文件、工具窗口、操作和设置。
+import random
 
 
-def print_hi(name):
-    # 在下面的代码行中使用断点来调试脚本。
-    print(f'Hi, {name}')  # 按 Ctrl+F8 切换断点。
+class Card:
+    def __init__(self) -> None:
+        pass
+    
+    def __str__(self) -> str:
+        pass
 
 
-# 按间距中的绿色按钮以运行脚本。
+class Cards:
+    def __init__(self) -> None:
+        self.cards = []
+    
+    def shuffle(self) -> list:
+        result = self.cards.copy()
+        random.shuffle(result)
+        return result
+
+
+class Poker(Card):
+    __name: list[str] = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'joker', 'JOKER']
+    
+    def __init__(self, n: int, s: str) -> None:
+        super().__init__()
+        self.number = n
+        self.suits = s
+    
+    def __str__(self) -> str:
+        return '<' + self.suits[0] + self.__name[self.number - 1] + '>'
+    
+    def __lt__(self, other):
+        return self.suits < other.suits if self.number == other.number else self.number < other.number
+
+
+class Pokers(Cards):
+    def __init__(self) -> None:
+        super().__init__()
+        self.cards = [Poker(14, 'None'), Poker(15, 'None')]
+        for i in range(1, 14):
+            for j in ['Space', 'Heart', 'Club', 'Diamond']:
+                self.cards.append(Poker(i, j))
+
+
+class CardGame:
+    def __init__(self, player_count: int, cards: Cards) -> None:
+        self.playerCount = player_count
+        self.cards = cards
+    
+    def play(self) -> list[list]:
+        result = self.cards.cards.copy()
+        random.shuffle(result)
+        return result
+
+
+class PokerGame(CardGame):
+    def __init__(self, player_count: int) -> None:
+        super().__init__(player_count, Pokers())
+    
+    def play(self, leave: int) -> list[list]:
+        count: int = len(self.cards.cards)
+        draw: int = count - leave
+        if draw % self.playerCount != 0:
+            raise ValueError('无法平均发牌')
+        draw //= self.playerCount
+        result = self.cards.cards.copy()
+        random.shuffle(result)
+        ret = []
+        for i in range(self.playerCount + 1):
+            ret.append(result[i * draw: (i + 1) * draw + 1])
+        ret[0].sort()
+        ret[1].sort()
+        ret[2].sort()
+        ret[3].sort()
+        return ret
+
+
+def _to_str(a: list[list[Poker]]) -> str:
+    r: str = ''
+    for k in a:
+        r += '['
+        for j in k:
+            r += str(j)
+        r += ']\n'
+    return r
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# 访问 https://www.jetbrains.com/help/pycharm/ 获取 PyCharm 帮助
+    res: list[list[Poker]] = PokerGame(3).play(3)
+    print(_to_str(res))
