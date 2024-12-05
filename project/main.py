@@ -1,12 +1,8 @@
-from sys import stderr
-
 import pygame
 import utils
 import threading
 import interact.interact as interact
 import elements.entity as entity
-import elements.item as item
-import traceback
 
 
 def gameThread():
@@ -26,10 +22,10 @@ def mainThread():
                         return
                     case pygame.KEYDOWN:
                         print(hex(event.key))
-                        interact.keys[event.key] = True
+                        interact.keys[event.key].set(True)
                         break
                     case pygame.KEYUP:
-                        interact.keys[event.key] = False
+                        interact.keys[event.key].set(False)
                         break
                     case pygame.MOUSEMOTION:
                         interact.mouse.set(event.pos)

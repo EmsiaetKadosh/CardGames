@@ -27,7 +27,11 @@ def error(*args, sep=' ', end='\n') -> None:
     output('[IKUN] [ERROR] ', *args, sep=sep, end=end, file=sys.stderr)
 
 
-def traceStack(e:Exception):
+def traceStack(e: Exception) -> None:
+    """
+    建议改为调用printException()
+    :param e: 被抛出的错误
+    """
     result = []
     last_file = None
     last_line = None
@@ -60,6 +64,10 @@ def traceStack(e:Exception):
         print(line, file=sys.stderr, end='')
 
 
-def printException(e: Exception):
+def printException(e: Exception) -> None:
+    """
+    抛出错误时调用
+    :param e: 被抛出的错误
+    """
     error(f'[{type(e).__name__}] {str(e)}!! when running code:')
     traceStack(e)
